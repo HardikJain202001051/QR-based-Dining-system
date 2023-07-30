@@ -1,0 +1,50 @@
+{
+  "name": "qr",
+  "version": "1.0.0",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "@expo/webpack-config": "^18.0.1",
+    "@gorhom/bottom-sheet": "^4.4.5",
+    "@react-navigation/drawer": "^6.6.2",
+    "@react-navigation/native": "^6.1.6",
+    "@stripe/stripe-react-native": "^0.27.0",
+    "body-parser": "^1.20.2",
+    "expo": "~48.0.9",
+    "expo-app-loading": "^2.1.1",
+    "expo-barcode-scanner": "^12.3.2",
+    "expo-font": "~11.1.1",
+    "expo-permissions": "^14.1.1",
+    "expo-status-bar": "~1.4.4",
+    "express": "^4.18.2",
+    "helmet": "^6.0.1",
+    "mssql": "^9.1.1",
+    "my-app": "file:",
+    "mysql": "^2.18.1",
+    "odbc": "^2.4.7",
+    "react": "18.2.0",
+    "react-native": "0.71.4",
+    "react-native-drawer": "^2.5.1",
+    "react-native-gesture-handler": "^2.9.0",
+    "react-native-reanimated": "~2.14.4",
+    "react-native-switch": "^1.5.1",
+    "react-native-tab-view": "^3.5.1",
+    "react-native-vector-icons": "^9.2.0",
+    "react-native-web": "~0.18.10",
+    "react-navigation": "^4.4.4",
+    "react-paystack": "^4.0.3",
+    "toggle-switch-react-native": "^3.3.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "dependency-cruiser": "^12.11.1",
+    "react-native-gesture-bottom-sheet": "^1.1.0",
+    "react-native-paystack": "^3.4.0"
+  },
+  "private": true
+}

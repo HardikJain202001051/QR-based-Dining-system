@@ -1,0 +1,561 @@
+
+                            <View style={{flexDirection:"row"}}>
+                            <TouchableOpacity 
+                                style={{paddingTop: 10,marginTop: 10, marginBottom: 20, margin: 10}}
+                                onPress={() => {
+                                    alert("order cancelled");
+                                }}
+                            >
+                                <View style={{
+                                    backgroundColor: "#222222",
+                                    padding: 12,
+                                    borderRadius: 6,
+                                }}>
+                                <Text style={{color: "white", textAlign: "center", fontFamily: 'GothamMedium'}}>Cancel</Text>
+                            </View>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity 
+                                style={{paddingTop: 10,marginTop: 10, marginBottom: 20, margin: 10}}
+                                onPress={() => {
+                                    console.log(item);
+                                    deleteItemButtonHandler(item.oid);
+                                }}
+                            >
+                                <View style={{
+                                    backgroundColor: "#222222",
+                                    padding: 12,
+                                    borderRadius: 6,
+                                }}>
+                                <Text style={{color: "white", textAlign: "center", fontFamily: 'GothamMedium'}}>Confirm</Text>
+                            </View>
+                            </TouchableOpacity>
+                            </View>
+
+
+
+
+
+
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import Drawer from "react-native-drawer";
+
+export default function SideSheet({ isOpen, toggleSidebar }) {
+  return (
+    <Drawer
+      open={isOpen}
+      type="overlay"
+      content={
+        <View style={styles.sidebarContent}>
+          <TouchableOpacity style={styles.list}>
+            <Ionicons
+              name="home-outline"
+              size={24}
+              color="#333"
+              style={styles.icon}
+            />
+            <Text style={styles.link}>Dashboard</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.list}>
+            <Ionicons
+              name="stats-chart-outline"
+              size={24}
+              color="#333"
+              style={styles.icon}
+            />
+            <Text style={styles.link}>Revenue</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.list}>
+            <Ionicons
+              name="notifications-outline"
+              size={24}
+              color="#333"
+              style={styles.icon}
+            />
+            <Text style={styles.link}>Notifications</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.list}>
+            <Ionicons
+              name="mail-outline"
+              size={24}
+              color="#333"
+              style={styles.icon}
+            />
+            <Text style={styles.link}>Messages</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.list}>
+            <Ionicons
+              name="settings-outline"
+              size={24}
+              color="#333"
+              style={styles.icon}
+            />
+            <Text style={styles.link}>Settings</Text>
+          </TouchableOpacity>
+        </View>
+      }
+    ></Drawer>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  navbar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 70,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f2f2f2',
+    paddingHorizontal: 20,
+  },
+  menuIcon: {
+    marginRight: 15,
+  },
+  logoName: {
+    fontFamily: 'GothamBold',
+    fontSize: 24,
+    color: '#333',
+  },
+  sidebar: {
+    top: 0,
+    bottom: 0,
+    width: 100,
+    backgroundColor: '#fff',
+    paddingTop: 70,
+    paddingHorizontal: 20,
+    borderRightWidth: 1,
+    borderRightColor: '#f2f2f2',
+  },
+  sidebarLogo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  sidebarContent: {
+    flex: 1,
+    zIndex:2,
+    width:"40%"
+  },
+  list: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f2f2f2',
+  },
+  icon: {
+    marginRight: 15,
+  },
+  link: {
+    fontFamily: 'GothamMedium',
+    fontSize: 18,
+    color: '#333',
+  },
+  bottomContent: {
+    borderTopWidth: 1,
+    borderTopColor: '#f2f2f2',
+    marginTop: 30,
+    paddingTop: 20,
+  },
+});
+
+
+
+
+
+
+
+
+
+
+
+
+import React, {useState, useEffect} from 'react';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import Home from './Home'
+import Menu from './Menu'
+import TopBar from './TopBar';
+import {useFonts} from 'expo-font';
+import AppLoading from 'expo-app-loading';
+import Login from './Login';
+import SideSheet from './SideMenu';
+import * as myConstClass from './HttpLink';
+import CartPage from './Cart';
+import Owner from './OwnerUI/Owner';
+import Register from './Registration';
+export default function App() {
+
+	const [viewMode, setViewMode] = useState("login");
+	const [user, setUser] = useState("customer");
+	const [qrCode_url, setQrCode_url] = useState(1);
+	const [menuCard, setMenuCard] = useState([]);
+	const [cart, setCart] = useState([]);
+	const [ownerId, setOwnerId] = useState();
+	
+	const ViewChanger = (mode) => {
+		setViewMode(mode)
+	}
+
+	let [fontsLoaded] = useFonts({
+			'GothamBlack': require('./assets/fonts/Gotham-Black.otf'),
+			'GothamBold': require('./assets/fonts/Gotham-Bold.otf'),
+			'GothamMedium': require('./assets/fonts/GothamMedium.ttf'),
+			'GothamLight': require('./assets/fonts/GothamLight.ttf'),
+			'GothamThin': require('./assets/fonts/Gotham-Thin.otf'),
+			'GothamBoldItalic': require('./assets/fonts/GothamBoldItalic.ttf'),
+			'GothamBookItalic': require('./assets/fonts/Gotham-BookItalic.otf')
+	});
+
+	if (!fontsLoaded) {
+		return <AppLoading />;
+	}
+
+	const fetchMenuCard = () =>{
+		console.log("Inside FetchMenuCard");
+        if(qrCode_url) {
+			console.log(`${myConstClass.HTTP_LINK}/getMenu/${qrCode_url}`);
+			fetch(`${myConstClass.HTTP_LINK}/getMenu/${qrCode_url}`)
+			.then(res=>res.json())
+			.then(results=>{
+				console.log("Menu-card ka data is received.", ...results);
+				results.forEach(dict => {
+					dict.quantity = 1;
+				  })
+				setMenuCard([...results]);
+			})
+			
+		}
+        return 1;
+	}
+	
+
+	/********* Button Handlers *********/
+  
+	const GoToMenuButtonHandler = (id) => {
+		setQrCode_url(id);
+		fetchMenuCard();
+		
+		setTimeout(() => {
+			setViewMode("menu");
+			console.log("After timeout");
+			console.log("This is Menu-card2 :-",...menuCard);
+		}, 2000);
+	}
+
+
+	const LoginButtonHandler = (id) => {
+		console.log(id);
+		fetch(`${myConstClass.HTTP_LINK}/login/${id}`)
+		.then(res=>res.json())
+		.then(results => {
+			if(results._id === -1) {
+				Alert.alert("Restaurant not found, #404. Try Again.");
+			} else {
+				//setOwnerId(results._id);
+				setOwnerId(1);
+				//setUser('owner');
+			}
+		})
+        .catch(e => console.log(e));		
+	}
+
+	return (<>
+    <TopBar ViewChanger={ViewChanger} />
+	<ScrollView>
+	        {viewMode === 'login' && <Login ViewChanger={ViewChanger} />}
+			{viewMode === 'register' && <Register ViewChanger={ViewChanger}/>}
+			{viewMode === "scan"  && <Home ViewChanger={ViewChanger} GoToMenuButtonHandler={GoToMenuButtonHandler} LoginButtonHandler={LoginButtonHandler} cart={cart} setCart={setCart}/>}
+			{viewMode === "menu" && <Menu menuCard={menuCard} ViewChanger={ViewChanger} cart={cart} setCart={setCart}/>}
+			{user == "owner" && <Owner ownerId={1} />}
+		
+	</ScrollView>
+    </>
+	);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+const panResponder = useRef(
+  PanResponder.create({
+    onMoveShouldSetPanResponder: () => true,
+    onPanResponderMove: (event, gesture) => {
+      setPosition({ x: gesture.moveX, y: gesture.moveY });
+      console.log(gesture);
+    },
+  })
+).current;
+
+
+
+
+
+
+
+
+ {/* Navbar */} cafe29
+            <View style={{ flex: 1, justifyContent: 'center', padding: 24, marginTop: 30, marginBottom: 20}}>
+                <View style={{ flexDirection: 'row', height: 55, backgroundColor: "#ECECEC", borderRadius: 8 }}>
+                        
+                    <TouchableOpacity
+                        style={{ 
+                            flex: 1,
+                            backgroundColor: null, 
+                            borderRadius: 6,
+                        }}
+                        
+                    >
+                        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center',marginRight: 20, justifyContent: 'center' }}>
+                        
+                        </View>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={{ 
+                            flex: 1,
+                            backgroundColor:null, 
+                            margin: 5,
+                            borderRadius: 8,
+                        }}
+                    >
+                        <View
+                            style={{
+                                flex: 1,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <Text style={{ marginLeft: 0, fontSize: 16, fontFamily: 'GothamMedium', lineHeight: 22, color: "black" }}>Cafe 29</Text>
+                        </View>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={{ 
+                            flex: 1,
+                            backgroundColor: null, 
+                            margin: 5,
+                            borderRadius: 8,
+                        }}
+                    >
+                        <View
+                            style={{
+                                flex: 1,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+
+
+
+
+
+
+            
+            {/* Shop ID Button */}
+            <TouchableOpacity 
+                style={{paddingTop: 10,marginTop: 20, marginBottom: 20, margin: 10}}  
+                onPress = {() => {
+                    console.log("Login with Shop id button is Pressed!!");
+                    LoginButtonHandler(restaurantId);
+                }} 
+            >
+                <View style={{
+                    backgroundColor: "gray",
+                    padding: 12,
+                    borderRadius: 6,
+                }}>
+                    <Text style={{color: "white", textAlign: "center", fontFamily: 'GothamMedium'}}>Login with shop ID</Text>
+                </View>
+            </TouchableOpacity>
+
+
+
+
+
+
+
+
+
+            {idData ? (
+                <TouchableOpacity 
+                    style={{paddingTop: 10,marginTop: 10, marginBottom: 40, margin: 10}}
+                    onPress = {() => {
+                        console.log("Go to Menu button is Pressed!!");
+                        GoToMenuButtonHandler(idData);
+                    }} 
+                >
+                    <View style={styles.button}>
+                        <Text style={{color: "white", textAlign: "center", fontFamily: 'GothamMedium'}}>Go to Menu</Text>
+                    </View>
+                </TouchableOpacity>
+            ) : (
+                <View />
+            )}
+
+
+
+
+
+
+            navbar of Menu
+            
+            {/* Navbar */}
+
+                    <View style={{ flexDirection: 'row', height: 55, backgroundColor: "#ECECEC", borderRadius: 8 }}>
+                        
+                        <TouchableOpacity
+                            style={{ 
+                                flex: 1,
+                                backgroundColor: null, 
+                                borderRadius: 6,
+                            }}
+                            onPress={ConfirmOrderButtonHandler}
+                        >
+                            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center',marginRight: 20, justifyContent: 'center' }}>
+                            <Image 
+                                style={{
+                                    width: 20, 
+                                    height: 20, 
+                                }}
+                                tintColor= "#1D256E"
+                                source={require('./assets/icons/back_arrow_icon.png')} />
+                            </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={{ 
+                                flex: 1,
+                                backgroundColor:null, 
+                                margin: 5,
+                                borderRadius: 8,
+                            }}
+                        >
+                            <View
+                                style={{
+                                    flex: 1,
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <Text style={{ marginLeft: 0, fontSize: 16, fontFamily: 'GothamMedium', lineHeight: 22, color: "black" }}>Menu</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={{ 
+                                flex: 1,
+                                backgroundColor: null, 
+                                margin: 5,
+                                borderRadius: 8,
+                            }}
+                            onPress={() => {
+                                if(cart.length>0) {
+                                    setViewMode("cart");
+                                }
+                            }}
+                        >
+                            <View
+                                style={{
+                                    flex: 1,
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                               <Text style={{ marginLeft: 0, fontSize: 16, fontFamily: 'GothamMedium', lineHeight: 22, color: "black" }}>View Cart</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
+
+
+
+
+
+                ADD button
+
+                <TouchableOpacity  
+                                    style={{paddingTop: 10,marginTop: 10, marginBottom: 20, margin: 10}}
+                                    onPress={() => {
+                                        if(!names.includes(item.fname)) {
+                                            setNames([...names, item.fname]);
+                                            let obj = {
+                                                fname: item.fname,
+                                                price: item.price,
+                                                image: item.image,
+                                                quantity : 0,
+                                                restaurantId: 1 //item.restaurantId
+                                            }
+                                            cart.push(obj);
+                                        }
+                                    }}
+                                >
+                                    <View style={{
+                                        backgroundColor: "white",
+                                        borderWidth: 1,
+                                        borderColor: "green",
+                                        padding: 12,
+                                        borderRadius: 6,
+                                    }}>
+                                        <Text style={{color: names.includes(item.fname) ? "blue" : "green" , textAlign: "center", fontFamily: 'GothamMedium'}}>
+                                            {names.includes(item.fname) ? "Added ✔️" : "Add" }
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+
+                REMOVE  button
+
+                <TouchableOpacity  
+                                    disabled={names.includes(item.fname) ? false : true }
+                                    style={{paddingTop: 10,marginTop: 10, marginBottom: 20, margin: 10}}
+                                    onPress={() => {
+                                        if(names.includes(item.fname)) {
+                                            let newNames = names.filter(nm => (nm === item.fname) ? false:true);
+                                            setNames(newNames);
+
+                                            let newCart = cart.filter(ob => (ob.name === item.fname) ? false: true);
+                                        
+                                            setCart([...newCart]);
+                                            console.log(cart);
+                                        }
+                                    }}
+                                >
+                                    <View style={{
+                                        backgroundColor: "white",
+                                        borderWidth: 1,
+                                        borderColor: "green",
+                                        padding: 12,
+                                        borderRadius: 6,
+                                    }}>
+                                        <Text style={{color: names.includes(item.fname) ? "blue" : "green" , textAlign: "center", fontFamily: 'GothamMedium'}}>
+                                            {names.includes(item.fname) ? "Remove" : "" }
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
